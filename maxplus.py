@@ -79,21 +79,57 @@ def modulo_matrices(A : np.ndarray,
     return result
 
 
-def power(a : Number, k : int) -> Number:
+def power(a : Number,
+          k : int) -> Number:
     return mult(*[a for _ in range(k)])
 
 
-def power_matrix(A : np.ndarray, k : int) -> np.ndarray:
+def power_matrix(A : np.ndarray,
+                 k : int) -> np.ndarray:
     if np.any(np.diagonal(A) != 0):
         raise ValueError(
             'Maxplus.power_matrix: matrix contains non-zero values on diagonal.'
         )
     if k == 0:
-        result = np.eye(A.shape[0], A.shape[1])
-        result[result == 0] = -math.inf
-        result[result == 1] = 0
+        result = unit_matrix(A.shape[0], A.shape[1])
     else:
         result = A.copy()
         for _ in range(k):
             result = mult_matrices(A, result)
     return result
+
+
+def unit_matrix(width : int,
+                height : int) -> np.ndarray:
+    if width < 0 or height < 0:
+        raise ValueError(
+            'Maxplus.unit_matrix: invalid width or height.'
+        )
+    result = np.eye(width, height)
+    result[result == 0] = -math.inf
+    result[result == 1] = 0
+    return result
+
+
+def star(A : np.ndarray,
+         iterations : int = 1000,
+         eps : float = 0.001) -> np.ndarray:
+    if A.shape[0] != A.shape[1]:
+        raise ValueError(
+            'Maxplus.star: matrix is not square.'
+        )
+    series = [
+        unit_matrix(A.shape[0], A.shape[1]),
+        A.copy()
+    ]
+    for i in range(2, iterations):
+        series.append(add_matrices(series[-1], series[-2]))
+        # Very basic check if the series is convergent.
+        if abs(np.max(series[-1] - series[-2])) < eps:
+            break
+    else:
+        raise ValueError(
+            'Maxplus.star: the series for this matrix is not convergent ' +\
+            '(within the limits of iterations).'
+        )
+    return series[-1]
