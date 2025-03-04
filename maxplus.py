@@ -42,7 +42,8 @@ def mult_matrices(A : np.ndarray,
     return result
 
 
-def modulo(a : Number, t : int) -> Number:
+def modulo(a : Number,
+           t : int) -> Number:
     if a == -math.inf:
         return -math.inf
     if a == 0:

@@ -42,7 +42,8 @@ def mult_matrices(A : np.ndarray,
     return result
 
 
-def modulo(a : Number, t : int) -> Number:
+def modulo(a : Number,
+           t : int) -> Number:
     if a == math.inf:
         return math.inf
     if a == 0:
@@ -79,11 +80,13 @@ def modulo_matrices(A : np.ndarray,
     return result
 
 
-def power(a : Number, k : int) -> Number:
+def power(a : Number,
+          k : int) -> Number:
     return mult(*[a for _ in range(k)])
 
 
-def power_matrix(A : np.ndarray, k : int) -> np.ndarray:
+def power_matrix(A : np.ndarray,
+                 k : int) -> np.ndarray:
     if np.any(np.diagonal(A) != 0):
         raise ValueError(
             'Minplus.power_matrix: matrix contains non-zero values on diagonal.'
