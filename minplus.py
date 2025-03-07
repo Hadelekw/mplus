@@ -1,13 +1,13 @@
 import math
 import numpy as np
-from numbers import Number
+from numbers import Real
 
 
-def add(*args) -> Number:
+def add(*args) -> Real:
     return min(args)
 
 
-def mult(*args) -> Number:
+def mult(*args) -> Real:
     return sum(args) if math.inf not in args else math.inf
 
 
@@ -42,8 +42,8 @@ def mult_matrices(A : np.ndarray,
     return result
 
 
-def modulo(a : Number,
-           t : int) -> Number:
+def modulo(a : Real,
+           t : int) -> Real:
     if a == math.inf:
         return math.inf
     if a == 0:
@@ -80,8 +80,8 @@ def modulo_matrices(A : np.ndarray,
     return result
 
 
-def power(a : Number,
-          k : int) -> Number:
+def power(a : Real,
+          k : int) -> Real:
     return mult(*[a for _ in range(k)])
 
 
@@ -131,6 +131,31 @@ def star(A : np.ndarray,
     else:
         raise ValueError(
             'Minplus.star: the series for this matrix is not convergent ' +\
-            '(within the limits of iterations).'
+            '(within the limits of iterations and decimal places).'
         )
     return series[-1]
+
+
+class Polynomial:
+    """ A simple implementation of a single-variable tropical polynomial. """
+
+    def __init__(self, *coefficients) -> None:
+        for value in coefficients:
+            if not isinstance(value, Real) or value == -math.inf:
+                raise ValueError(
+                    'Minplus.Polynomial.__init__: coefficient value out of domain.'
+                )
+        self.coefficients = coefficients[::-1]
+
+    def __call__(self, x : float) -> float:
+        return add(*[mult(coefficient, power(x, i)) for i, coefficient in enumerate(self.coefficients)])
+
+    def get_hypersurface(self) -> list[float]:
+        result = []
+        candidates = [c2 - c1 for c1, c2 in zip(self.coefficients[1:], self.coefficients[:-1])]
+        for candidate in candidates:
+            if not isinstance(candidate, Real) or candidate == -math.inf:
+                continue
+            if abs(self(candidate) - self(candidate - 1)) != abs(self(candidate) - self(candidate + 1)):
+                result.append(candidate)
+        return result
