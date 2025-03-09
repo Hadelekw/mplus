@@ -1,0 +1,20 @@
+[project]
+name = "mplusa"
+version = "0.0.1"
+authors = [
+    {name="Maksymilian W.", email="maksymilian3563@gmail.com"}
+]
+description = "A library for calculations in tropical and arctic semirings."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.2.3"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = {file="LICENSE"}
+
+[project.urls]
+homepage = "https://github.com/Hadelekw/mplusa"

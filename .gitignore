@@ -1,2 +1,6 @@
 __pycache__/
+*/__pycache__/
 venv/
+dist/
+.pypirc
+*.egg-info
