@@ -4,10 +4,18 @@ from numbers import Real
 
 
 def add(*args) -> Real:
+    if math.inf in args:
+        raise ValueError(
+            'Maxplus.add: value out of domain.'
+        )
     return max(args)
 
 
 def mult(*args) -> Real:
+    if math.inf in args:
+        raise ValueError(
+            'Maxplus.add: value out of domain.'
+        )
     return sum(args) if -math.inf not in args else -math.inf
 
 
@@ -44,6 +52,10 @@ def mult_matrices(A : np.ndarray,
 
 def modulo(a : Real,
            t : int) -> Real:
+    if a < 0 or t < 0:
+        raise ValueError(
+            'Maxplus.modulo: modulo operation is only defined for positive numbers.'
+        )
     if a == -math.inf:
         return -math.inf
     if a == 0:
@@ -58,7 +70,7 @@ def modulo_matrices(A : np.ndarray,
     if b.shape[1] != 1:
         raise ValueError(
             'Maxplus.modulo_matrices: given matrix b ' +\
-            'is not a properly formated vector (has shape of {}).'.format(
+            'is not a vertical vector of shape Mx1 (has shape of {}).'.format(
                 b.shape
             )
         )
@@ -89,7 +101,7 @@ def power_matrix(A : np.ndarray,
                  k : int) -> np.ndarray:
     if np.any(np.diagonal(A) != 0):
         raise ValueError(
-            'Maxplus.power_matrix: matrix contains non-zero values on diagonal.'
+            'Maxplus.power_matrix: matrix contains non-zero values on the diagonal.'
         )
     if k == 0:
         result = unit_matrix(A.shape[0], A.shape[1])
