@@ -1,6 +1,6 @@
 [project]
 name = "mplusa"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     {name="Maksymilian W.", email="maksymilian3563@gmail.com"}
 ]
