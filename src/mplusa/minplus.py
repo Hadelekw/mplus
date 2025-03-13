@@ -162,12 +162,18 @@ class Polynomial:
     def __call__(self, x : float) -> float:
         return add(*[mult(coefficient, power(x, i)) for i, coefficient in enumerate(self.coefficients)])
 
+    def get_lines(self) -> list[tuple[float]]:
+        """ Returns the a and b values of standard linear functions building the polynomial in form of y = ax + b. """
+        return [(a, b) for a, b in enumerate(self.coefficients) if b < math.inf]
+
     def get_hypersurface(self) -> list[float]:
+        lines = self.get_lines()
         result = []
-        candidates = [c2 - c1 for c1, c2 in zip(self.coefficients[1:], self.coefficients[:-1])]
-        for candidate in candidates:
-            if not isinstance(candidate, Real) or candidate == -math.inf:
-                continue
-            if abs(self(candidate) - self(candidate - 1)) != abs(self(candidate) - self(candidate + 1)):
-                result.append(candidate)
-        return result
+        for (a, c) in lines:
+            for (b, d) in lines:
+                if a == b or c == d:
+                    continue
+                x = (d - c) / (a - b)
+                if a * x + c == self(x):
+                    result.append(x)
+        return list(set(result))
